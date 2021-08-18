@@ -1,0 +1,24 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Список проектов</h1>
+
+    {% if project_list %}
+    <ul>
+
+      {% for proj in project_list %}
+      <li>
+          {%if user.is_manager%}
+
+        <a href="{{ proj.get_absolute_url }}">{{ proj.name }}</a>
+          {%else%}
+        <p>{{proj.name}}</p>
+        {%endif%}
+      </li>
+      {% endfor %}
+
+    </ul>
+    {% else %}
+      <p>Список проектов пуст</p>
+    {% endif %}
+{% endblock %}

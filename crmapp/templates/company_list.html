@@ -1,0 +1,29 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Список компаний</h1>
+
+    {% if company_list %}
+    <ul>
+        <a href="?sort=date_created">Date</a>
+        <a href="?sort=name_comp">Name</a>
+      {% for comp in company_list %}
+      <li>
+        <a href="{{ comp.get_absolute_url }}">{{ comp.name_comp }}</a>
+          <p>{{comp.emails_set.all}}</p>
+          <p>{{comp.phones_set.all}}</p>
+          <p>{{comp.names_set.all}}</p>
+          <p>{{comp.date_created}}</p>
+          <p>{{comp.date_edit}}</p>
+
+
+      </li>
+      {% endfor %}
+
+    </ul>
+    {% else %}
+      <p>Список компаний пуст</p>
+    {% endif %}
+
+
+{% endblock %}

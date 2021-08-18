@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+{%if user.is_manager%}
+
+<form action="" method="post">
+    {% csrf_token %}
+    <table>
+    {{ form.as_table }}
+    {{ phone_form.as_table }}
+    {{ email_form.as_table }}
+    {{ name_form.as_table }}
+
+    </table>
+
+    <input type="submit" value="Ок" />
+
+</form>
+
+{%else%}
+<p>Вы не можете просматривать данную страницу</p>
+{%endif%}
+{% endblock %}

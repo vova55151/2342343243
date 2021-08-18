@@ -1,0 +1,20 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+{%if user.is_manager%}
+
+<p>Проект : {{object.project}}</p>
+<p>Канал обращения : {{object.channel_of_reference}}</p>
+<p>Описание : {{object.descr}}</p>
+<p>Рейтинг : {{object.rating}}</p>
+<p>Менеджер : {{object.manager}}</p>
+<p>Дата создания: {{object.date_created}}</p>
+<p>Дата изменения: {{object.date_edit}}</p>
+
+<a href="{{ request.path }}/delete">Удалить взаимодействие</a>
+
+<a href="{{ request.path }}/update">Обновить взаимодействие</a>
+{%else%}
+<p>Вы не можете просматривать данную страницу</p>
+{%endif%}
+{% endblock %}

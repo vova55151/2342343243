@@ -1,0 +1,43 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<p>Имя компании : {{ object.name_comp }}</p>
+
+{%if object.email_set.all%}
+<p>Email :</p>
+{%for email in object.email_set.all%}
+<p>{{email}}</p>
+{%endfor%}
+{%else%}
+<p>Email отсутствуют</p>
+{%endif%}
+
+{%if object.phone_set.all%}
+<p>Телефоны :</p>
+{%for phone in object.phone_set.all%}
+<p> {{phone}}</p>
+{%endfor%}
+{%else%}
+<p>Телефоны отсутствуют</p>
+{%endif%}
+
+{%if object.name_set.all%}
+<p>Контактные лица :</p>
+{%for name in object.name_set.all%}
+<p>{{name}}</p>
+{%endfor%}
+{%else%}
+<p>Контактные лица отсутствуют</p>
+{%endif%}
+
+<p>Адрес : {{object.adress}}</p>
+<p>Дата создания : {{object.date_created}}</p>
+<p>Дата изменения : {{object.date_edit}}</p>
+{%if user.is_manager%}
+
+<a href="{{ request.path }}/delete">Удалить компанию</a>
+
+<a href="{{ request.path }}/update">Обновить компанию</a>
+
+{%endif%}
+{% endblock %}

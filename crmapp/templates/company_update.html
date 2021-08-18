@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+{%if user.is_manager%}
+
+<h1>Редактирование компании</h1>
+<form method="post" action="">
+    {%  csrf_token %}
+    {{ form.as_p }}
+    {{ phone_form.as_p }}
+    {{ email_form.as_p }}
+    {{ name_form.as_p }}
+
+    <p><button type="submit">Сохранить</button></p>
+</form>
+{%else%}
+<p>Вы не можете просматривать данную страницу</p>
+{%endif%}
+{% endblock content %}

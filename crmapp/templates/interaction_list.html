@@ -1,0 +1,41 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+{%if user.is_manager%}
+{% if interaction_list %}
+
+
+    <ul>
+        <h1>Сортировать список всех взаимодействий</h1>
+        <a href="?sort=project">Проект</a>
+        <a href="?sort=rating">Рейтинг</a>
+        <a href="?sort=date_created">Дата создания</a>
+        <a href="?sort=date_edit">Дата изменения</a>
+
+       <form method="get">
+        {{ filter.form.as_p }}
+        <input type="submit" />
+    </form>
+    {%if filter.qs%}
+        <h1>Список отфильтрованных взаимодействий</h1>
+    {% for obj in filter.qs %}
+        <li>
+        <a href="{{ obj.get_absolute_url }}">{{ obj }}</a>
+        </li>
+    {% endfor %}
+    {%endif%}
+    <h1>Список всех взаимодействий</h1>
+      {% for interaction in interaction_list %}
+      <li>
+        <a href="{{ interaction.get_absolute_url }}">{{ interaction }}</a>
+      </li>
+      {% endfor %}
+
+    </ul>
+{%endif%}
+{%else%}
+<p>Вы не можете просматривать данную страницу</p>
+
+
+{%endif%}
+{% endblock %}

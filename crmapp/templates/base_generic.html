@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  {% block title %}<title>CRM</title>{% endblock %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <!-- Добавление дополнительного статического CSS файла -->
+  {% load static %}
+  <script type="text/javascript" src='{% static "ckeditor/ckeditor-init.js" %}'></script>
+  <script type="text/javascript" src='{% static "ckeditor/ckeditor/ckeditor.js" %}'></script>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+
+{% if user.is_authenticated %}
+
+   <li>Пользователь: {{ user.get_username }}</li>
+<img src="/media/{{user.img}}" alt="img" width="50" height="60">
+<li><a href="{% url 'logout'%}?next={{request.path}}">Выход</a></li>
+  <div class="container-fluid">
+
+    <div class="row">
+      <div class="col-sm-2">
+      {% block sidebar %}
+      <ul class="sidebar-nav">
+        <li><a href="{% url 'list_comp'%}">Список компаний</a></li>
+
+        <li><a href="{% url 'list_proj'%}">Список проектов</a></li>
+
+
+
+        {%if user.is_manager%}
+        <li><a href="{% url 'list_inter'%}">Список взаимодействий</a></li>
+        <li><a href="{% url 'create_comp'%}">Создать компанию</a></li>
+        <li><a href="{% url 'create_proj'%}">Создать проект</a></li>
+        <li><a href="{% url 'create_inter'%}">Создать взаимодействие</a></li>
+        {%endif%}
+
+
+      </ul>
+     {% endblock %}
+      </div>
+      <div class="col-sm-10 ">
+    {% block content %}{% endblock %}
+    {%include 'pagination.html'%}
+      </div>
+    </div>
+
+  </div>
+{%else%}
+<p>Только зарегестрированные пользователи могут просматривать эту страницу</p>
+<li><a href="{% url 'login'%}?next={{request.path}}">Вход</a></li>
+<li><a href="{% url 'list_comp'%}?next={{request.path}}">Список компаний</a></li>
+{%endif%}
+</body>
+</html>
