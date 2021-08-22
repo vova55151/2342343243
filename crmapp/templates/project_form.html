@@ -1,7 +1,6 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-{%if user.is_manager%}
 
 <form action="" method="post">
     {% csrf_token %}
@@ -14,7 +13,5 @@
     <input type="submit" value="Ок" />
 
 </form>
-{%else%}
-<p>Вы не можете просматривать данную страницу</p>
-{%endif%}
+
 {% endblock %}

@@ -1,7 +1,6 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-{%if user.is_manager%}
 
 <h1>Удалить проект</h1>
 
@@ -11,7 +10,5 @@
   {% csrf_token %}
   <input type="submit" value="Удалить." />
 </form>
-{%else%}
-<p>Вы не можете просматривать данную страницу</p>
-{%endif%}
+
 {% endblock %}

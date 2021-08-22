@@ -8,9 +8,13 @@ from crm.managers import CustomUserManager
 from crmapp import settings
 
 
-# TODO : CompanyUpdateView не передаются данные из реквеста в форму
-
 class User(AbstractUser):
+    """
+    Переопределенная модель юзера ,использующая Email вместо юзернейма для логина
+    Атрибуты:
+    is_manager(bool): проверка,является ли юзер менеджером
+    img: Фото профиля
+    """
     username = None
     email = models.EmailField(_('email address'), unique=True)
     is_manager = models.BooleanField(default=False, verbose_name='Статус менеджера')
@@ -21,10 +25,23 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
+        """
+        Строковое представление юзера
+        Возвращает email юзера
+        """
         return self.email
 
 
 class Company(models.Model):
+    """
+    Модель компании
+    Атрибуты:
+    name_comp: название компании
+    descr: описание,использующее  WYSIWYG редактор
+    date_created: дата создания
+    date_edit: дата изменения
+    adress: адрес
+    """
     name_comp = models.CharField(max_length=100, verbose_name='Название')
     descr = RichTextField(blank=True, null=True, verbose_name='Описание', )
     date_created = models.DateField(auto_now_add=True)
@@ -32,13 +49,26 @@ class Company(models.Model):
     adress = models.CharField(max_length=100, verbose_name='Адрес')
 
     def __str__(self):
+        """
+        Строковое представление компании
+        Возвращает название компании
+        """
         return str(self.name_comp)
 
     def get_absolute_url(self):
+        """
+        Возвращает юрл информации о компанни с определенным pk
+        """
         return reverse('detail_comp', args=[str(self.pk)])
 
 
 class Email(models.Model):
+    """
+    Модель email
+    Атрибуты:
+    email: email
+    company: компания,с которой свзязан данный email
+    """
     email = models.EmailField(verbose_name='Email')
     company = models.ForeignKey(to=Company, on_delete=models.CASCADE, verbose_name='Компания')
 
@@ -47,6 +77,12 @@ class Email(models.Model):
 
 
 class Phone(models.Model):
+    """
+    Модель контактов
+    Атрибуты:
+    phone: телефон
+    company: компания,с которой свзязан данный телефон
+    """
     phone = models.CharField(max_length=100, verbose_name='Телефон')
     company = models.ForeignKey(to=Company, on_delete=models.CASCADE, verbose_name='Компания')
 
@@ -55,6 +91,12 @@ class Phone(models.Model):
 
 
 class Name(models.Model):
+    """
+    Модель ФИО руководителя (контактного лица)
+    Атрибуты:
+    name: ФИО
+    company: компания,с которой свзязан данный человек
+    """
     name = models.CharField(max_length=100, verbose_name='Контактное лицо')
     company = models.ForeignKey(to=Company, on_delete=models.CASCADE, verbose_name='Компания')
 
@@ -63,6 +105,17 @@ class Name(models.Model):
 
 
 class Project(models.Model):
+    """
+    Модель проекта
+    Атрибуты:
+    company: компания
+    name: название
+    descr: описание,использующее  WYSIWYG редактор
+    date_start: дата начала
+    date_end: дата окончания
+    date_created: дата создания
+    date_edit: дата изменения
+    """
     company = models.ForeignKey(to=Company, on_delete=models.PROTECT, verbose_name='Компания')
     name = models.CharField(max_length=100, verbose_name='Название')
     descr = RichTextField(max_length=500, blank=True, null=True, verbose_name='Описание')
@@ -76,10 +129,24 @@ class Project(models.Model):
         return self.name
 
     def get_absolute_url(self):
+        """
+        Возвращает юрл информации о проекте с определенным pk
+        """
         return reverse('detail_proj', args=[str(self.pk)])
 
 
 class Interaction(models.Model):
+    """
+    Модель взаимодействия
+    Атрибуты:
+    project: проект
+    channel_of_reference: канал обращения
+    descr: описание,использующее  WYSIWYG редактор
+    rating: рейтинг
+    manager: менеджер
+    date_created: дата создания
+    date_edit: дата изменения
+    """
     project = models.ForeignKey(to=Project, on_delete=models.PROTECT, verbose_name='Проект')
     channel = (
         ('З', "Заявка"),
@@ -102,4 +169,7 @@ class Interaction(models.Model):
                f'Дата создания : {self.date_created}'
 
     def get_absolute_url(self):
+        """
+        Возвращает юрл информации о взаимодействии с определенным pk
+        """
         return reverse('detail_inter', args=[str(self.pk)])

@@ -1,8 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-{%if user.is_manager%}
-
+<h1>Информация о проекте</h1>
 <p>{{object.company}}</p>
 <p>{{object.name}}</p>
 <p>{{object.descr}}</p>
@@ -12,7 +11,5 @@
 <a href="{{ request.path }}/delete">Удалить проект</a>
 
 <a href="{{ request.path }}/update">Обновить проект</a>
-{%else%}
-<p>Вы не можете просматривать данную страницу</p>
-{%endif%}
+
 {% endblock %}

@@ -8,12 +8,7 @@
 
       {% for proj in project_list %}
       <li>
-          {%if user.is_manager%}
-
         <a href="{{ proj.get_absolute_url }}">{{ proj.name }}</a>
-          {%else%}
-        <p>{{proj.name}}</p>
-        {%endif%}
       </li>
       {% endfor %}
 

@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-{%if user.is_manager%}
+
 {% if interaction_list %}
 
 
@@ -33,9 +33,5 @@
 
     </ul>
 {%endif%}
-{%else%}
-<p>Вы не можете просматривать данную страницу</p>
 
-
-{%endif%}
 {% endblock %}

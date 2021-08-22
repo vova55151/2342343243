@@ -2,7 +2,7 @@
 
 
 {% block content %}
-{%if user.is_manager%}
+
 
 <h1>Редактирование взаимодействия</h1>
 <form method="POST" action="">
@@ -10,8 +10,6 @@
     {{ form.as_p }}
     <p><button type="submit">Сохранить</button></p>
 </form>
-{%else%}
-<p>Вы не можете просматривать данную страницу</p>
-{%endif%}
+
 
 {% endblock content %}

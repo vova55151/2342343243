@@ -1,6 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
+<h1>Информация о компании</h1>
 <p>Имя компании : {{ object.name_comp }}</p>
 
 {%if object.email_set.all%}
@@ -33,11 +34,10 @@
 <p>Адрес : {{object.adress}}</p>
 <p>Дата создания : {{object.date_created}}</p>
 <p>Дата изменения : {{object.date_edit}}</p>
-{%if user.is_manager%}
 
 <a href="{{ request.path }}/delete">Удалить компанию</a>
 
 <a href="{{ request.path }}/update">Обновить компанию</a>
 
-{%endif%}
+
 {% endblock %}

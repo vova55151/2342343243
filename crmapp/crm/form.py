@@ -1,4 +1,4 @@
-import django_filters
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.forms import inlineformset_factory
@@ -6,37 +6,50 @@ import re
 from crm.models import *
 
 
-# TODO : login(/admin/) редиректит на http://127.0.0.1:8000/accounts/profile/
 class CustomUserCreationForm(UserCreationForm):
+    """
+    Переопределенная форма создания юзера
+    """
+
     class Meta:
         model = User
         fields = ('email',)
 
 
 class CustomUserChangeForm(UserChangeForm):
+    """
+    Переопределенная форма смены юзера
+    """
+
     class Meta:
         model = User
         fields = ('email',)
 
 
-# class CompanyForm(forms.Form):
-#     name_comp = forms.CharField()
-#     adress = forms.CharField()
-#     descr = forms.CharField(widget=forms.Textarea)
-#     # date_created = models.DateField()
-#     # date_edit = models.DateField()
 class EmailModelForm(forms.ModelForm):
+    """
+    Модельная форма Email
+    """
+
     class Meta:
         model = Email
         fields = '__all__'
 
 
 class PhoneModelForm(forms.ModelForm):
+    """
+    Модельная форма контактов
+    """
+
     class Meta:
         model = Phone
         fields = '__all__'
 
     def clean_phone(self):
+        """
+        Вызывается при отправке формы.Проверяет валидность номера телефона
+        Возвращает ValidationError,если форма не валидна
+        """
         phone = self.cleaned_data.get('phone')
         pattern = r'^[0-9\-\+]{9,15}$'
         if re.match(pattern, phone):
@@ -46,11 +59,19 @@ class PhoneModelForm(forms.ModelForm):
 
 
 class NameModelForm(forms.ModelForm):
+    """
+    Модельная форма ФИО руководителя (контактного лица)
+    """
+
     class Meta:
         model = Name
         fields = '__all__'
 
     def clean_name(self):
+        """
+        Вызывается при отправке формы.Проверяет ,состоит ли имя только из букв
+        Возвращает ValidationError,если форма не валидна
+        """
         name = self.cleaned_data.get('name')
         pattern = r'^[\Dа-яА-Яa-zA-Z\D]*$'
         if re.match(pattern, name):
@@ -60,11 +81,19 @@ class NameModelForm(forms.ModelForm):
 
 
 class CompanyModelForm(forms.ModelForm):
+    """
+    Модельная форма компании
+    """
+
     class Meta:
         model = Company
         fields = '__all__'
 
     def clean_name_comp(self):
+        """
+        Вызывается при отправке формы.Проверяет ,есть ли аналогичное название компании в БД
+        Возвращает ValidationError,если форма не валидна
+        """
         name_comp = self.cleaned_data.get('name_comp')
         qs = Company.objects.filter(name_comp__iexact=name_comp)
         if self.instance is not None:
@@ -74,14 +103,23 @@ class CompanyModelForm(forms.ModelForm):
         return name_comp
 
 
+"""
+Инлайн формсет Email
+"""
 CompanyFormSetEmail = inlineformset_factory(
     Company, Email, form=EmailModelForm,
     fields=['email'], extra=2, can_delete=True
 )
+"""
+Инлайн формсет ФИО руководителя (контактного лица)
+"""
 CompanyFormSetName = inlineformset_factory(
     Company, Name, form=NameModelForm,
     fields=['name'], extra=2, can_delete=True
 )
+"""
+Инлайн формсет телефона
+"""
 CompanyFormSetPhone = inlineformset_factory(
     Company, Phone, form=PhoneModelForm,
     fields=['phone'], extra=2, can_delete=True
@@ -89,11 +127,19 @@ CompanyFormSetPhone = inlineformset_factory(
 
 
 class ProjectModelForm(forms.ModelForm):
+    """
+    Модельная форма проекта
+    """
+
     class Meta:
         model = Project
         fields = '__all__'
 
     def clean_cost(self):
+        """
+        Вызывается при отправке формы.Проверяет,состоит ли стоимость только из цифр
+        Возвращает ValidationError,если форма не валидна
+        """
         cost = self.cleaned_data.get('cost')
         pattern = r'^[\W\d\W]*$'
         if re.match(pattern, cost):
@@ -103,20 +149,22 @@ class ProjectModelForm(forms.ModelForm):
 
 
 class InteractionModelForm(forms.ModelForm):
+    """
+    Модельная форма взаимодействия
+    """
+
     class Meta:
         model = Interaction
         fields = '__all__'
 
     def clean_rating(self):
+        """
+        Вызывается при отправке формы.Проверяет,состоит ли рейтинг только из цифр от 0 до 5
+        Возвращает ValidationError,если форма не валидна
+        """
         rating = self.cleaned_data.get('rating')
-        pattern = r'^[\W\d\W]*$'
+        pattern = r'^[0-5]$'
         if re.match(pattern, rating):
             return rating
         else:
-            raise forms.ValidationError("Рейтинг должен состоять только из цифр")
-
-# class InteractionFilter(django_filters.FilterSet):
-#     company = django_filters.CharFilter(lookup_expr='iexact')
-#     class Meta:
-#         model = Interaction
-#         exclude = ['company']
+            raise forms.ValidationError("Укажите рейтинг от 0 до 5")
